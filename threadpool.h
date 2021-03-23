@@ -7,37 +7,36 @@
 #include <sys/types.h>
 #include <unistd.h>
 #include <pthread.h>
+#include <fcntl.h>
+#include <sys/stat.h>
+#include "http.h"
 #include "sys/epoll.h"
-#include "wrap.h"
+#include "dirent.h"
+#include "signal.h"
 
-typedef struct _PoolTask
+class ThreadPool
 {
-    int tasknum;//模拟任务编号
-    void *arg;
-    void (*task_func)(void *arg);//任务的回调函数
-    int fd;
-    int epfd;
-    struct epoll_event *evs;
-}PoolTask;
-
-typedef struct _ThreadPool
-{
+public:
+    ThreadPool(int thread_num = 8, int max_request = 1000);
+    ~ThreadPool();
+    void add_task(int fd);
+    void destroy_threadpool();//摧毁线程池
+    void set_epfd(int fd);
+public:
+    static void *work(void *arg);
+    void run();
+    int beginnum = 1000;
     int max_job_num;//最大任务个数
     int job_num;//实际任务个数
-    PoolTask *tasks;//任务队列数组
+    Http *m_tasks;//任务队列数组
     int job_push;
     int job_pop;
     int thr_num;
-    pthread_t *threads;
+    pthread_t *m_threads;
+    int m_epfd;
     int shutdown;
-    pthread_mutex_t pool_lock;//线程池的锁
-    pthread_cond_t empty_task;//任务队列为空的条件
-    pthread_cond_t not_empty_task;//任务队列不为空的条件
-}ThreadPool;
-
-void create_threadpool(int thr_num,int max_tasknum);//创建线程池--thrnum  代表线程个数，maxtasknum 最大任务个数
-void destroy_threadpool(ThreadPool *pool);//摧毁线程池
-void add_task(ThreadPool *pool,int fd,struct epoll_event *evs);
-void task_run(void *arg);//任务回调函数
-
+    pthread_mutex_t m_tasks_lock;//线程池的锁
+    pthread_cond_t m_empty_task;//任务队列为空的条件
+    pthread_cond_t m_not_empty_task;//任务队列不为空的条件
+};
 #endif

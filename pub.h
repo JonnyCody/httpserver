@@ -11,8 +11,8 @@
 #include <ctype.h>
 char *get_mime_type(char *name);
 int get_line(int sock, char *buf, int size);
-int hexit(char c);//16½øÖÆ×ª10½øÖÆ
-void strencode(char* to, size_t tosize, const char* from);//±àÂë
-void strdecode(char *to, char *from);//½âÂë
+int hexit(char c);//16ï¿½ï¿½ï¿½ï¿½×ª10ï¿½ï¿½ï¿½ï¿½
+void strencode(char* to, size_t tosize, const char* from);//ï¿½ï¿½ï¿½ï¿½
+void strdecode(char *to, char *from);//ï¿½ï¿½ï¿½ï¿½
 #endif
 
