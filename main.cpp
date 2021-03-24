@@ -14,7 +14,7 @@ int main()
 	strcat(pwd_path,"/web-http");
 	chdir(pwd_path);
     //启动8个线程，任务队列最多10
-    ThreadPool tp(8,10);
+    ThreadPool tp(8,1000);
 	
     int i = 0;
     int lfd = socket(PF_INET, SOCK_STREAM, 0);
@@ -38,7 +38,7 @@ int main()
     assert(lfd >= 0);
     //创建树
     int epfd = epoll_create(5);
-    printf("epoll create\n");
+    // printf("epoll create\n");
     epoll_event ev,evs[1024];
     ev.data.fd = lfd;
     ev.events = EPOLLIN;//监听读事件

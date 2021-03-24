@@ -27,9 +27,9 @@ void Http::set_epfd(int epfd)
 	m_epfd=epfd;
 }
 
-void Http::set_cfd(int fd)
+void Http::set_cfd(int cfd)
 {
-	m_cfd=fd;
+	m_cfd=cfd;
 }
 
 void Http::send_file(char *path,int flag)

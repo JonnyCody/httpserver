@@ -21,8 +21,15 @@ public:
     ~ThreadPool();
     void add_task(int fd);
     void destroy_threadpool();//摧毁线程池
-    void set_epfd(int fd);
+    void set_epfd(int epfd);
+    int get_epfd();
+    
 public:
+    pthread_t *m_threads;
+    pthread_mutex_t m_tasks_lock;//线程池的锁
+    pthread_cond_t m_empty_task;//任务队列为空的条件
+    pthread_cond_t m_not_empty_task;//任务队列不为空的条件
+private:
     static void *work(void *arg);
     void run();
     int beginnum = 1000;
@@ -32,11 +39,7 @@ public:
     int job_push;
     int job_pop;
     int thr_num;
-    pthread_t *m_threads;
     int m_epfd;
     int shutdown;
-    pthread_mutex_t m_tasks_lock;//线程池的锁
-    pthread_cond_t m_empty_task;//任务队列为空的条件
-    pthread_cond_t m_not_empty_task;//任务队列不为空的条件
 };
 #endif

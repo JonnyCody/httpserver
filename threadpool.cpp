@@ -50,11 +50,14 @@ void *ThreadPool::work(void *arg)
     return pool;
 }
 
-void ThreadPool::set_epfd(int fd)
+void ThreadPool::set_epfd(int epfd)
 {
-    m_epfd=fd;
+    m_epfd=epfd;
 }
-
+int ThreadPool::get_epfd()
+{
+    return m_epfd;
+}
 void ThreadPool::run()
 {
     printf("begin call %s-----\n",__FUNCTION__);
@@ -119,7 +122,6 @@ void ThreadPool::destroy_threadpool()
     delete[] m_threads;
 }
 
-
 //添加任务到线程池
 void ThreadPool::add_task(int fd)
 {
@@ -136,13 +138,13 @@ void ThreadPool::add_task(int fd)
     printf("add task %d  tasknum===%d\n",task_pos,beginnum);
     m_tasks[task_pos].tasknum=beginnum++;
     printf("asdf\n");
-    m_tasks[task_pos].m_cfd=fd;
-    m_tasks[task_pos].m_epfd=this->m_epfd;
+    m_tasks[task_pos].set_cfd(fd);
+    m_tasks[task_pos].set_epfd(get_epfd());
     // (m_tasks+task_pos)->set_event(evs);
     job_num++;
 
     pthread_mutex_unlock(&m_tasks_lock);
 
     pthread_cond_signal(&m_not_empty_task);//通知包身工
-    printf("end call %s-----\n",__FUNCTION__);
+    // printf("end call %s-----\n",__FUNCTION__);
 }

@@ -25,7 +25,7 @@ public:
     void init(int sockfd,const sockaddr_in &addr);
     void process();
     void set_epfd(int epfd);
-    void set_cfd(int fd);
+    void set_cfd(int cfd);
 
 public:
     void read_back();
@@ -34,7 +34,7 @@ public:
     void send_file(char *path,int epfd);
     void reset_oneshot();
 
-public:
+private:
     struct sockaddr_in m_address;
     char m_read_buf[READ_BUFFER_SIZE];
     char m_write_buf[WRITE_BUFFER_SIZE];
